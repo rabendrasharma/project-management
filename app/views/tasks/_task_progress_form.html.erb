@@ -1,0 +1,6 @@
+<%= form_for(task)do |f| %>
+  <%= f.hidden_field :owner_id, value: @user.id %>
+  <%= f.hidden_field :status, value: "progress" %>
+  <%= f.submit "Mark Progress", class: "btn btn-default"%>
+<% end %>
+

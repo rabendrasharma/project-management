@@ -1,0 +1,92 @@
+<div class="header">
+  <div class="container">
+    <h1>Home</h1>
+  </div>
+</div>
+
+<div class="container">
+  <%= render "layouts/flash_block" %>
+
+  <div class="default-block">
+    <h2>Your Stats</h2>
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <% current_user.projects.each do |project| %>
+              <th><%= project.name %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Done</td>
+            <% current_user.projects.each do |project| %>
+              <td>
+                <% project.tasks.where(status: 1).each do |task| %>
+                  <%= task.name %><%= task.user_tasks.map{|task| task.assigned_user.name}%></br>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+          <tr>
+            <td>In Progress</td>
+            <% current_user.projects.each do |project| %>
+              <td>
+                <% project.tasks.where(status: 0).each do |task| %>
+                  <%= task.name %>     <%= task.user_tasks.map{|task| task.assigned_user.name}%></br>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+          <tr>
+            <td>New</td>
+            <% current_user.projects.each do |project| %>
+              <td>
+                <% project.tasks.where(status: 2).each do |task| %>
+                  <%= task.name %>    <%= task.user_tasks.map{|task| task.assigned_user.name}%></br>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div> <!-- row end -->
+  </div> <!-- block end -->
+  <div class="pie-charts">
+    <% current_user.projects.each do |project| %>
+      <div id="pie-chart-<%=project.id%>" class="col-md-6"></div>
+    <% end %>
+  </div>
+</div> <!-- container end -->
+<script type="text/javascript">
+  <% current_user.projects.each do |project| %>
+    Highcharts.chart("pie-chart-<%=project.id%>", {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 30
+            }
+        },
+        title: {
+            text: "<%= project.name %>"
+        },
+        plotOptions: {
+            pie: {
+                innerSize: 50,
+                depth: 30
+            }
+        },
+        series: [{
+            name: 'Tasks',
+            data: [
+                ['Done', <%=project.tasks.where(status: 1).count%>],
+                ['Progress', <%=project.tasks.where(status: 0).count%>],
+                ['New', <%=project.tasks.where(status: 2).count%>]
+            ]
+        }]
+    });
+  <% end %>
+</script>
