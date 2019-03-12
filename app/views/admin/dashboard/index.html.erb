@@ -2,18 +2,88 @@
   <h2>Dashboard</h2>
   <div class="line-dark"></div>
 
-  <h3> <%= link_to "#{@users.count} users", admin_users_path %></h3>
-
-  <h3> <%= @projects.count %> projects</h3>
-    <h5> <%= @projects.active.count %> active</h5>
-    <h5> <%= @projects.complete.count %> complete</h5>
-
-  <h3> <%= @tasks.count %> tasks</h3>
-    <h5> <%= @tasks.active.count %> active</h5>
-    <h5> <%= @tasks.complete.count %> complete</h5>
-
-  <h3> <%= @notes.count %> notes</h3>
-
-  <h3> <%= @comments.count %> comments</h3>
-
+  <div class="default-block">
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <% current_user.projects.each do |project| %>
+              <th><%= project.name %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Done</td>
+            <% current_user.projects.each do |project| %>
+              <td>
+                <% project.tasks.where(status: 1).each do |task| %>
+                  <%= task.name+"  -  " %><%= task.assigned_users.pluck(:name).join(", ")%></br>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+          <tr>
+            <td>In Progress</td>
+            <% current_user.projects.each do |project| %>
+              <td>
+                <% project.tasks.where(status: 0).each do |task| %>
+                  <%= task.name %>     <%= task.assigned_users.pluck(:name).join(", ")%></br>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+          <tr>
+            <td>New</td>
+            <% current_user.projects.each do |project| %>
+              <td>
+                <% project.tasks.where(status: 2).each do |task| %>
+                  <%= task.name %>    <%= task.assigned_users.pluck(:name).join(", ") %></br>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div> <!-- row end -->
+  </div> <!-- block end -->
 </div>
+<div class="pie-charts">
+  <% current_user.projects.each do |project| %>
+    <div id="pie-chart-<%=project.id%>" class="col-md-6"></div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  <% current_user.projects.each do |project| %>
+    <% if project.tasks.present? %>
+      Highcharts.chart("pie-chart-<%=project.id%>", {
+          chart: {
+              type: 'pie',
+              options3d: {
+                  enabled: true,
+                  alpha: 30
+              }
+          },
+          title: {
+              text: "<%= project.name %>"
+          },
+          plotOptions: {
+              pie: {
+                  innerSize: 50,
+                  depth: 30
+              }
+          },
+          series: [{
+              name: 'Tasks',
+              data: [
+                  ['Done', <%=project.tasks.where(status: 1).count%>],
+                  ['Progress', <%=project.tasks.where(status: 0).count%>],
+                  ['New', <%=project.tasks.where(status: 2).count%>]
+              ]
+          }]
+      });
+    <% end %>
+  <% end %>
+</script>
