@@ -20,7 +20,7 @@
         <%= render partial: "tasks/task_complete_form", locals: {task: @task} unless @task.complete? %>
       </div>
       <div class="inline-button">
-        <%= button_to "Delete Task", task_path(@task), method: :delete, class: "btn btn-sm btn-danger" %>
+        <%= button_to "Delete Task", task_path(@task, project_id: @project.id), method: :delete, class: "btn btn-sm btn-danger" %>
         </div>
     </div> <!-- default block end  -->
 
