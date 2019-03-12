@@ -11,7 +11,7 @@ class Task < ActiveRecord::Base
   has_many :assigned_users, through: :user_tasks
   belongs_to :owner, class_name: "User"
 
-  enum status: [:active, :complete, :unactive, :progress]
+  enum status: [:active, :complete, :inactive, :progress]
 
   validates :name, :description, :due_date, :status, :project_id, presence: true
   
@@ -36,7 +36,7 @@ class Task < ActiveRecord::Base
   end
 
   def assign_status
-    self.status = 2
+    self.status = 2 if (self.status == nil)
   end
 
   def tag_names

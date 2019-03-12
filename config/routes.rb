@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     get'/all-complete-tasks', to: 'tasks#all_complete_tasks', as: "all_complete_tasks"
     get'/all-overdue-tasks', to: 'tasks#all_overdue_tasks', as: "all_overdue_tasks"
     get'/all-in-active-tasks', to: 'tasks#all_inactive_tasks', as: "all_inactive_tasks"
+    get'/all-in-progress-tasks', to: 'tasks#all_in_progress_tasks', as: "all_in_progress_tasks"
   end
 
   resources :projects do

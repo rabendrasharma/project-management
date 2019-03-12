@@ -61,6 +61,14 @@ class User < ActiveRecord::Base
     self.assigned_tasks.active 
   end
 
+  def in_active_tasks
+    self.assigned_tasks.inactive 
+  end
+
+  def in_progress_tasks
+    self.assigned_tasks.progress 
+  end
+
   def complete_assigned_tasks
     self.assigned_tasks.complete
   end

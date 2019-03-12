@@ -25,7 +25,7 @@
             <% current_user.projects.each do |project| %>
               <td>
                 <% project.tasks.where(status: 1).each do |task| %>
-                  <%= task.name %><%= task.user_tasks.map{|task| task.assigned_user.name}%></br>
+                  <%= task.name+"  -  " %><%= task.assigned_users.pluck(:name).join(", ")%></br>
                 <% end %>
               </td>
             <% end %>
@@ -35,7 +35,7 @@
             <% current_user.projects.each do |project| %>
               <td>
                 <% project.tasks.where(status: 0).each do |task| %>
-                  <%= task.name %>     <%= task.user_tasks.map{|task| task.assigned_user.name}%></br>
+                  <%= task.name %>     <%= task.assigned_users.pluck(:name).join(", ")%></br>
                 <% end %>
               </td>
             <% end %>
@@ -45,7 +45,7 @@
             <% current_user.projects.each do |project| %>
               <td>
                 <% project.tasks.where(status: 2).each do |task| %>
-                  <%= task.name %>    <%= task.user_tasks.map{|task| task.assigned_user.name}%></br>
+                  <%= task.name %>    <%= task.assigned_users.pluck(:name).join(", ") %></br>
                 <% end %>
               </td>
             <% end %>
@@ -62,31 +62,33 @@
 </div> <!-- container end -->
 <script type="text/javascript">
   <% current_user.projects.each do |project| %>
-    Highcharts.chart("pie-chart-<%=project.id%>", {
-        chart: {
-            type: 'pie',
-            options3d: {
-                enabled: true,
-                alpha: 30
-            }
-        },
-        title: {
-            text: "<%= project.name %>"
-        },
-        plotOptions: {
-            pie: {
-                innerSize: 50,
-                depth: 30
-            }
-        },
-        series: [{
-            name: 'Tasks',
-            data: [
-                ['Done', <%=project.tasks.where(status: 1).count%>],
-                ['Progress', <%=project.tasks.where(status: 0).count%>],
-                ['New', <%=project.tasks.where(status: 2).count%>]
-            ]
-        }]
-    });
+    <% if project.tasks.present? %>
+      Highcharts.chart("pie-chart-<%=project.id%>", {
+          chart: {
+              type: 'pie',
+              options3d: {
+                  enabled: true,
+                  alpha: 30
+              }
+          },
+          title: {
+              text: "<%= project.name %>"
+          },
+          plotOptions: {
+              pie: {
+                  innerSize: 50,
+                  depth: 30
+              }
+          },
+          series: [{
+              name: 'Tasks',
+              data: [
+                  ['Done', <%=project.tasks.where(status: 1).count%>],
+                  ['Progress', <%=project.tasks.where(status: 0).count%>],
+                  ['New', <%=project.tasks.where(status: 2).count%>]
+              ]
+          }]
+      });
+    <% end %>
   <% end %>
 </script>

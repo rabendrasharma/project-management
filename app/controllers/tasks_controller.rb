@@ -3,7 +3,7 @@ class TasksController < ApplicationController
   before_action :set_task
   before_action :set_project
   before_action :project_task_statuses_count, only: [:index, :complete, :overdue]
-  before_action :all_task_statuses_count, only: [:all_active_tasks, :all_complete_tasks, :all_overdue_tasks, :all_inactive_tasks]
+  before_action :all_task_statuses_count, only: [:all_active_tasks, :all_complete_tasks, :all_overdue_tasks, :all_inactive_tasks, :all_in_progress_tasks]
 
   ## STANDARD RESTFUL ACTIONS
 
@@ -45,7 +45,7 @@ class TasksController < ApplicationController
   end
 
   def update
-    # authorize @task
+    #authorize @task
     @task.update(task_params)
     if task_params[:tag_names]
       @task.update(tag_names: task_params[:tag_names])
@@ -82,7 +82,13 @@ class TasksController < ApplicationController
   end
 
   def all_inactive_tasks
-    @tasks = @user.tasks.inactive
+    @tasks = (@user.tasks.inactive + @user.assigned_tasks.inactive).uniq
+    @tasks.flatten!
+  end
+
+  def all_in_progress_tasks
+    @tasks = (@user.tasks.progress + @user.assigned_tasks.progress).uniq
+    @tasks.flatten!
   end
 
   def all_overdue_tasks
@@ -119,12 +125,17 @@ class TasksController < ApplicationController
   def all_task_statuses_count
     @overdue = (current_user.overdue_tasks + current_user.overdue_assigned_tasks).uniq.count
     @active = (current_user.active_tasks + current_user.active_assigned_tasks).uniq.count
-    @complete= (current_user.complete_tasks + current_user.complete_tasks).uniq.count
-    @inactive = @user.tasks.inactive.count
+    @complete= (current_user.complete_tasks + current_user.complete_assigned_tasks).uniq.count
+    @inactive = (@user.tasks.inactive + @user.in_active_tasks).uniq.count
+    @in_progress_tasks = (@user.tasks.progress + @user.in_progress_tasks).uniq.count
   end
 
   def task_params
-    params.require(:task).permit(:name, :description, :project_id, :owner_id, :due_date, :status, :tag_names, assigned_user_ids: [], tag_ids: [])
+    if self.action_name == "update"
+      params.require(:task).permit(:name, :description, :project_id, :due_date, :status, :tag_names, assigned_user_ids: [], tag_ids: [])
+    else
+      params.require(:task).permit(:name, :description, :project_id, :owner_id, :due_date, :status, :tag_names, assigned_user_ids: [], tag_ids: [])
+    end
   end
 
   def task_users

@@ -9,6 +9,9 @@
     <%= link_to "Active Tasks ( #{active} )", all_active_tasks_path, class: "btn btn-warning" %> 
   </div>
   <div class="inline-button">
+    <%= link_to "In Progress Tasks ( #{progress} )", all_in_progress_tasks_path, class: "btn btn-success" %>
+  </div>
+  <div class="inline-button">
     <%= link_to "Complete Tasks ( #{complete} )", all_complete_tasks_path, class: "btn btn-success" %>
   </div>
   <div class="inline-button">
