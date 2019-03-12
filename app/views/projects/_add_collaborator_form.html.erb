@@ -1,7 +1,9 @@
 <%= form_for(project) do |f| %>
   <div class="form-group">
-    <%= f.label :collaborators, "Add users to collaborate by email, comma seperated" %>
-      <%= f.text_field :collaborator_emails, value: nil, class: "form-control"%>
+    <%= f.label :collaborators, "Collaborators (Email address)" %>
+    <div>
+      <%= f.select :collaborator_emails, User.all.map { |u| [u.email, u.email] }, { include_blank: true, :placeholder => 'User Name' }, { multiple: true, class: 'chosen-select add-users'} %>
+    </div>
   </div>
   <div class="form-group">
   <%= f.hidden_field :project_id, value: project.id %>

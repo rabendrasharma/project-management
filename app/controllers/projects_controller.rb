@@ -92,6 +92,8 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
+    params[:project][:collaborator_emails].shift
+    params[:project][:collaborator_emails] = params[:project][:collaborator_emails].join(",")
     params.require(:project).permit(:name, :description, :collaborator_emails, :owner_id, :due_date, :status, notes_attributes: [:title, :content, :user_id])
   end
 end

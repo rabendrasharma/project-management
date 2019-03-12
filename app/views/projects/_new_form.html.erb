@@ -11,9 +11,15 @@
   <%= f.label :due_date, class: "control-label"%>
     <%= f.date_select :due_date, :order => [:month, :day, :year], class: "form-control"%>
   </div>
+<!--   <div class="form-group">
+    <%#= f.label :collaborators, "Collaborators (Email address, comma seperated)" %>
+      <%#= f.text_field :collaborator_emails, class: "form-control"%>
+  </div> -->
   <div class="form-group">
-    <%= f.label :collaborators, "Collaborators (Email address, comma seperated)" %>
-      <%= f.text_field :collaborator_emails, class: "form-control"%>
+    <%= f.label :collaborators, "Collaborators (Email address)" %>
+    <div>
+      <%= f.select :collaborator_emails, User.all.map { |u| [u.email, u.email] }, { include_blank: true, :placeholder => 'User Name' }, { multiple: true, class: 'chosen-select collaborators'} %>
+    </div>
   </div>
   <div class="form-group">
   <%= f.label :notes, "Add a note", class: "control-label"%><br/>

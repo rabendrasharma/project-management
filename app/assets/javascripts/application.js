@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require highcharts
+//= require chosen-jquery
+
 
 $(document).ready(function(){
   $( "#show-profile-options" ).click(function() {
@@ -24,4 +26,7 @@ $(document).ready(function(){
       $( "#show-profile-options" ).val("Edit Profile");
     }
   });
+  $('.chosen-select').chosen({
+        allow_single_deselect: true,
+        no_results_text: 'No results matched'})
 });

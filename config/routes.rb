@@ -14,8 +14,6 @@ Rails.application.routes.draw do
     get "/profile" => 'users/registrations#edit'
   end
 
-  resources :tags
-
   scope "/tasks" do
     get'/new', to: 'tasks#quick_new_task', as: "quick_new_task"
     post'/', to: 'tasks#create', as: "post_quick_new_task"
@@ -44,7 +42,6 @@ Rails.application.routes.draw do
 
   namespace :admin do 
     get 'dashboard' => 'dashboard#index', :as => :dashboard
-    get 'tags' => 'dashboard#tags', :as => :tags
     get 'users' => 'dashboard#users', :as => :users
     get 'users/:id' => 'dashboard#user_edit', :as => :user_edit
   end

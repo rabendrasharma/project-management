@@ -9,7 +9,6 @@ class User < ActiveRecord::Base
   has_many :projects
   has_many :comments
   has_many :notes
-  has_many :tags 
 
   has_many :user_projects, foreign_key: "collaborator_id"
   has_many :projects, foreign_key: "owner_id"
@@ -75,10 +74,6 @@ class User < ActiveRecord::Base
 
   def overdue_assigned_tasks
     self.assigned_tasks.overdue
-  end
-
-  def collaboration_tags
-    self.collaboration_projects.collect {|task| task.tags.collect {|tag| tag}}
   end
 
 end

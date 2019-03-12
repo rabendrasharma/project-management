@@ -35,7 +35,6 @@ class TasksController < ApplicationController
     @comment = Comment.new
     @comments = @task.comments.reverse
     @assigned_users = @task.assigned_users
-    @tags = @task.tags
   end
 
   def edit
@@ -47,9 +46,6 @@ class TasksController < ApplicationController
   def update
     #authorize @task
     @task.update(task_params)
-    if task_params[:tag_names]
-      @task.update(tag_names: task_params[:tag_names])
-    end
     redirect_to task_path(@task)
   end
 
@@ -132,9 +128,9 @@ class TasksController < ApplicationController
 
   def task_params
     if self.action_name == "update"
-      params.require(:task).permit(:name, :description, :project_id, :due_date, :status, :tag_names, assigned_user_ids: [], tag_ids: [])
+      params.require(:task).permit(:name, :description, :project_id, :due_date, :status, assigned_user_ids: [])
     else
-      params.require(:task).permit(:name, :description, :project_id, :owner_id, :due_date, :status, :tag_names, assigned_user_ids: [], tag_ids: [])
+      params.require(:task).permit(:name, :description, :project_id, :owner_id, :due_date, :status, assigned_user_ids: [])
     end
   end
 

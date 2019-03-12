@@ -24,7 +24,7 @@
     <%= f.label :password_confirmation %><br />
     <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
   </div>
-
+  <%= f.hidden_field "role", value: ((params["role"] == "admin") ? "admin" : "user") %>
   <div class="actions form-group">
     <%= f.submit "Sign up", class: "btn btn-default" %>
   </div>

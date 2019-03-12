@@ -8,7 +8,6 @@ class Admin::DashboardController < ApplicationController
     @comments = Comment.all 
     @notes = Note.all 
     @tasks = Task.all 
-    @tags = Tag.all
   end
 
   def users

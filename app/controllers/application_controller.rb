@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:account_update, keys: [:role, :name])
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :role])
   end
 
   def user_not_authorized
@@ -26,7 +26,11 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    request.env['omniauth.origin'] || root_path
+    if resource.role == "admin"
+      admin_dashboard_path
+    elsif resource.role == "user"
+      root_path
+    end
   end
   
 end
