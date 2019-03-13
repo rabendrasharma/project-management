@@ -41,7 +41,7 @@ development:
   encoding: unicode
   database: project_management_development
   pool: 5
-  username: roby
+  username: postgres
   password: 12345678
   host: localhost
 
